@@ -5,9 +5,11 @@
 package it.polito.tdp.extflightdelays;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.extflightdelays.model.Model;
+import it.polito.tdp.extflightdelays.model.Rotta;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,7 +37,29 @@ public class FXMLController {
 
     @FXML
     void doAnalizzaAeroporti(ActionEvent event) {
-    	//TODO
+    	int miglia = 0;
+    	this.txtResult.clear();
+    	try {
+    		miglia = Integer.parseInt(this.distanzaMinima.getText());
+    	}catch(NumberFormatException e ) {
+    		this.txtResult.setText("Inserire un numero valido.");
+    	}
+    	if( miglia > 0) {
+    		model.creaGrafo(miglia);
+    		List<Rotta> rotte = model.getRotte();
+    		int n = model.nArchi();
+    		int m = model.nVertici();
+    		this.txtResult.appendText("Grafo creato con " + m + " vertici e " + n + " archi." + "\n");
+    		this.txtResult.appendText( " Rotte trovate : \n\n");
+    		for( Rotta r : rotte) {
+    			this.txtResult.appendText(r.getA1().getAirportName() + " - " + r.getA2().getAirportName() + " " 
+    		+ r.getPeso() + "\n");
+    		}
+    	}else {
+    		this.txtResult.setText("Inserire un numero maggiore di zero.");
+
+    	}
+    
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
